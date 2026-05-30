@@ -46,7 +46,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          GrievEase Login
+          CiviTrack Login
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -75,7 +75,7 @@ const LoginPage = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
+                placeholder="••• •••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -99,7 +99,7 @@ const LoginPage = () => {
           </button>
 
           <div className="text-center text-sm mt-2">
-            Don’t have an account?{" "}
+            Don't have an account?{" "}
             <a href="/register" className="text-blue-600 hover:underline">
               Register
             </a>

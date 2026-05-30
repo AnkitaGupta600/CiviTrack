@@ -1,4 +1,3 @@
-import { useState } from "react";
 import HomePage from "./pages/HomePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
@@ -9,13 +8,16 @@ import Layout from "../Layout";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import ProfilePage from "./pages/dashboard/Profile";
 import Profile from "./pages/officer/Profile";
+
 import OfficerLayout from "./pages/officer/OfficerLayout";
+import OfficerHome from "./pages/officer/OfficerHome";
 
 import MyComplaintsPage from "./pages/dashboard/MyComplaints";
 import NewComplaints from "./pages/officer/NewComplaints";
 import Assigned from "./pages/officer/Assigned";
+import Resolved from "./pages/officer/Resolved";
 function App() {
-  const [count, setCount] = useState(0);
+  
 
   return (
     <Routes>
@@ -30,9 +32,11 @@ function App() {
           <Route path="complaints" element={<MyComplaintsPage />} />
         </Route>
         <Route path="/officer" element={<OfficerLayout />}>
-          <Route index path="profile" element={<Profile />} />
+         <Route index element={<OfficerHome />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="assigned" element={<Assigned />} />
           <Route path="pending" element={<NewComplaints />} />
+          <Route path="resolved" element={<Resolved />} />
         </Route>
       </Route>
 

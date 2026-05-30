@@ -61,10 +61,7 @@ chatSocketHandler(io);
 // MongoDB Connection and Server Start
 const PORT = process.env.PORT || 5000;
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to MongoDB");
     server.listen(PORT, () => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaHome, FaUser, FaCog, FaBars } from "react-icons/fa";
+import { FaHome, FaUser, FaBars, FaCheckCircle } from "react-icons/fa";
 import { IoMdNotifications, IoMdDoneAll } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,7 @@ export default function OSidebar() {
             icon={<FaHome />}
             label="Home"
             isOpen={isOpen}
-            onClick={() => navigate("/dashboard/home")}
+            onClick={() => navigate("/officer")}
           />
           <SidebarItem
             icon={<FaUser />}
@@ -37,16 +37,22 @@ export default function OSidebar() {
             onClick={() => navigate("/officer/profile")}
           />
           <SidebarItem
+            icon={<IoMdNotifications />}
+            label="Pending"
+            isOpen={isOpen}
+            onClick={() => navigate("/officer/pending")}
+          />
+          <SidebarItem
             icon={<IoMdDoneAll />}
             label="Active"
             isOpen={isOpen}
             onClick={() => navigate("/officer/assigned")}
           />
           <SidebarItem
-            icon={<IoMdNotifications />}
-            label="Pending"
+            icon={<FaCheckCircle />}
+            label="Resolved"
             isOpen={isOpen}
-            onClick={() => navigate("/officer/pending")}
+            onClick={() => navigate("/officer/resolved")}
           />
         </nav>
       </div>

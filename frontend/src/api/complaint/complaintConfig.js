@@ -30,9 +30,13 @@ export const complaintSubmit = async (formData) => {
 export const likeComplaint = async (id) => {
   const res = await fetch(`${API_BASE}/${id}/like`, {
     method: "POST",
+    credentials: "include", // Sends cookies for auth
   });
 
-  if (!res.ok) throw new Error("Failed to like complaint");
+  if (!res.ok) {
+    const errData = await res.json();
+    throw new Error(errData.error || "Failed to like complaint");
+  }
   return res.json();
 };
 
@@ -40,9 +44,13 @@ export const likeComplaint = async (id) => {
 export const unlikeComplaint = async (id) => {
   const res = await fetch(`${API_BASE}/${id}/unlike`, {
     method: "POST",
+    credentials: "include", // Sends cookies for auth
   });
 
-  if (!res.ok) throw new Error("Failed to unlike complaint");
+  if (!res.ok) {
+    const errData = await res.json();
+    throw new Error(errData.error || "Failed to unlike complaint");
+  }
   return res.json();
 };
 
@@ -86,6 +94,42 @@ export const fetchPendingComplaints = async () => {
   } catch (error) {
     console.error("Error fetching pending complaints:", error);
     return [];
+  }
+};
+
+export const getResolvedComplaints = async () => {
+  const res = await fetch(`${API_BASE}/resolved`, {
+    method: "GET",
+    credentials: "include", // Important for sending auth cookie
+  });
+
+  if (!res.ok) throw new Error("Failed to fetch resolved complaints");
+  return res.json();
+};
+
+export const resolveComplaint = async (complaintId) => {
+  try {
+    const response = await fetch(`${API_BASE}/${complaintId}/resolve`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      toast.success(data.message);
+      return data;
+    } else {
+      toast.error(data.message);
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    console.error("Error resolving complaint:", error);
+    toast.error("Something went wrong");
+    throw error;
   }
 };
 

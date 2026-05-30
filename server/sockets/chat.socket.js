@@ -5,9 +5,19 @@ export const chatSocketHandler = (io) => {
     console.log("User connected:", socket.id);
 
     // Join room (one room per complaint)
-    socket.on("joinRoom", (complaintId) => {
+    socket.on("joinRoom", async (complaintId) => {
       socket.join(complaintId);
       console.log(`Socket ${socket.id} joined room ${complaintId}`);
+      
+      // Send existing messages to the user joining the room
+      try {
+        const chat = await Chat.findOne({ complaintId }).populate("messages.senderId");
+        if (chat && chat.messages) {
+          socket.emit("loadMessages", chat.messages);
+        }
+      } catch (error) {
+        console.error("Error loading messages:", error);
+      }
     });
 
     // Handle message send
@@ -17,7 +27,7 @@ export const chatSocketHandler = (io) => {
 
         if (!complaintId || !citizenId || !officerId || !senderId || !message) {
           console.error("Missing fields in chat message data");
-          return;
+          return; 
         }
 
         // Find existing chat by complaintId
@@ -53,3 +63,20 @@ export const chatSocketHandler = (io) => {
     });
   });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

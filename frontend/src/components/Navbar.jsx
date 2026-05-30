@@ -24,7 +24,7 @@ const Navbar = () => {
           to="/"
           className="text-2xl font-bold text-blue-700 tracking-wide cursor-pointer"
         >
-          Griev<span className="text-indigo-600">Ease</span>
+          Civi<span className="text-indigo-600">Track</span>
         </Link>
 
         {/* Desktop Nav */}

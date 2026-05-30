@@ -17,6 +17,7 @@ const LocationMap = ({ latitude, longitude, onLocationChange }) => {
   const markerRef = useRef(null);
   const inputRef = useRef(null);
   const [suggestions, setSuggestions] = useState([]);
+  const [addressStatus, setAddressStatus] = useState("Address not found");
 
   useEffect(() => {
     if (isLoaded && latitude && longitude) {
@@ -130,6 +131,10 @@ const LocationMap = ({ latitude, longitude, onLocationChange }) => {
       )}
 
       <div id="map-canvas" style={containerStyle}></div>
+      
+      <div className="mt-2 p-2 bg-gray-100 rounded text-center text-sm font-medium text-gray-700">
+        {addressStatus}
+      </div>
     </div>
   );
 };

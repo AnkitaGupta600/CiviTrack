@@ -7,6 +7,7 @@ export default function HomePage() {
       <HeroSection />
       <HowItWorks />
       {/* Add more sections here */}
+      
     </>
   );
 }

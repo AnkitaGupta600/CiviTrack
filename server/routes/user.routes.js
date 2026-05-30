@@ -7,6 +7,7 @@ import {
   logoutUser,
   verifyEmail,
   getUserProfile,
+  getUserById,
   updateUser,
   resendVerificationEmail,
 } from "../controllers/user.js";
@@ -20,11 +21,12 @@ router.get("/verify-user", verifyUser, async (req, res) => {
   });
 });
 router.post("/logout", logoutUser);
-router.get("/", (req, res) => {
-  res.send("Welcome to the User Routes!");
-});
 router.get("/verify-email", verifyEmail);
 router.get("/profile", getUserProfile);
-router.put("/update", verifyUser, updateUser);
+router.put("/update", verifyUser, upload.single("profilePic"), updateUser);
 router.get("/resend-verification", verifyUser, resendVerificationEmail);
+router.get("/:userId", getUserById);
 export default router;
+
+
+ 

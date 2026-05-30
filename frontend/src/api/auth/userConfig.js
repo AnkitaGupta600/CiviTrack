@@ -25,3 +25,16 @@ export const logoutUser = async () => {
 
   return await response.json();
 };
+
+export const getUserById = async (userId) => {
+  console.log("getUserById called with:", userId, typeof userId);
+  const id = userId?._id || userId;
+  console.log("Final id being sent:", id);
+  const response = await fetch(`${serverUrl}/api/users/${userId}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch user details");
+  }
+
+  return await response.json();
+};

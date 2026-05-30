@@ -10,7 +10,7 @@ const Footer = () => {
     bottom-0 w-full z-50 "
     >
       <div className=" flex flex-col sm:flex-row justify-between items-center text-sm">
-        <div>Copyright © 2025 GrievEase. All rights reserved.</div>
+        <div>Copyright © 2025 CiviTrack. All rights reserved.</div>
         <div className="mt-4 sm:mt-0 space-x-4">
           <a href="#" className="hover:underline">
             Terms & Conditions

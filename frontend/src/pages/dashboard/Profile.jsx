@@ -11,6 +11,8 @@ const ProfilePage = () => {
     address: "",
   });
   const [editingField, setEditingField] = useState(null);
+  const [profilePicFile, setProfilePicFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -51,19 +53,35 @@ const ProfilePage = () => {
     setEditableFields({ ...editableFields, [editingField]: e.target.value });
   };
 
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePicFile(file);
+      // Create a preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleUpdateProfile = async () => {
     try {
+      const formData = new FormData();
+      formData.append("username", editableFields.username);
+      formData.append("phone", editableFields.phone);
+      formData.append("address", editableFields.address);
+      
+      // Add profile picture if one was selected
+      if (profilePicFile) {
+        formData.append("profilePic", profilePicFile);
+      }
+
       const res = await fetch(`${serverUrl}/api/users/update`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
         credentials: "include",
-        body: JSON.stringify({
-          username: editableFields.username,
-          phone: editableFields.phone,
-          address: editableFields.address,
-        }),
+        body: formData,
       });
 
       const data = await res.json();
@@ -72,10 +90,13 @@ const ProfilePage = () => {
         setUser((prev) => ({
           ...prev,
           ...editableFields,
+          profilePic: previewUrl || prev.profilePic,
         }));
         alert("Profile updated successfully!");
         setEditMode(false);
         setEditingField(null);
+        setProfilePicFile(null);
+        setPreviewUrl(null);
       } else {
         alert(data.message || "Failed to update profile");
       }
@@ -112,11 +133,24 @@ const ProfilePage = () => {
       <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-md p-6 flex flex-col sm:flex-row items-center sm:items-start gap-8 transition-all duration-300">
         {/* Left - Profile Pic and Basic Info */}
         <div className="flex flex-col items-center sm:items-start sm:w-1/3 gap-4">
-          <img
-            src={user.profilePic ? `${user.profilePic}` : "/default-avatar.png"}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 shadow"
-          />
+          <div className="relative">
+            <img
+              src={previewUrl || (user.profilePic ? `${user.profilePic}` : "/default-avatar.png")}
+              alt="Profile"
+              className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 shadow"
+            />
+            {editMode && (
+              <label className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full cursor-pointer shadow-md">
+                <Pencil className="w-4 h-4" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePicChange}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
           <div className="text-center sm:text-left">
             <h2 className="text-xl font-semibold text-gray-800">
               {user.fullName}
@@ -204,7 +238,7 @@ const ProfilePage = () => {
             </p>
           </div>
 
-          <div className="col-span-full mt-4">
+          <div className="col-span-full mt-4 flex gap-3">
             {!editMode ? (
               <button
                 onClick={() => setEditMode(true)}
@@ -213,12 +247,25 @@ const ProfilePage = () => {
                 Edit Profile
               </button>
             ) : (
-              <button
-                onClick={handleUpdateProfile}
-                className="px-5 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md shadow"
-              >
-                Save Changes
-              </button>
+              <>
+                <button
+                  onClick={handleUpdateProfile}
+                  className="px-5 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md shadow"
+                >
+                  Save Changes
+                </button>
+                <button
+                  onClick={() => {
+                    setEditMode(false);
+                    setEditingField(null);
+                    setProfilePicFile(null);
+                    setPreviewUrl(null);
+                  }}
+                  className="px-5 py-2 text-sm bg-gray-400 hover:bg-gray-500 text-white rounded-md shadow"
+                >
+                  Cancel
+                </button>
+              </>
             )}
           </div>
         </div>

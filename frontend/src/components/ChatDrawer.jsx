@@ -34,21 +34,30 @@ const ChatDrawer = ({
     console.log("Joining room:", complaintId);
     socket.current.emit("joinRoom", complaintId);
 
+    // Load existing messages
+    socket.current.on("loadMessages", (existingMessages) => {
+      console.log("Messages loaded:", existingMessages);
+      setMessages(existingMessages);
+    });
+
+    // Listen for new messages
     socket.current.on("newMessage", (msg) => {
       console.log("New message received:", msg);
       setMessages((prev) => [...prev, msg]);
     });
 
     return () => {
+      socket.current.off("loadMessages");
       socket.current.off("newMessage");
     };
   }, [complaintId, socket]);
 
   const sendMessage = () => {
     if (newMsg.trim() && user) {
+      const userId = user._id || user.id; // Handle both _id and id
       const payload = {
         complaintId,
-        senderId: user.id,
+        senderId: userId,
         citizenId: complaintUserId,
         officerId: complaintOfficerId,
         message: newMsg,
@@ -68,22 +77,34 @@ const ChatDrawer = ({
     <Drawer open={open} onOpenChange={onOpenChange} direction="right">
       <DrawerContent className="right-0 left-auto w-full max-w-md h-full fixed top-0 z-50 border-l bg-white shadow-lg flex flex-col">
         <DrawerHeader>
-          <DrawerTitle>Chat with Officer</DrawerTitle>
+          <DrawerTitle>Chats</DrawerTitle>
         </DrawerHeader>
 
         <div className="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`p-3 rounded-lg w-fit max-w-[80%] ${
-                msg.senderId === user?.id
-                  ? "bg-blue-100 self-end text-right"
-                  : "bg-gray-100 self-start text-left"
-              }`}
-            >
-              {msg.message}
-            </div>
-          ))}
+          {messages.map((msg, index) => {
+            const currentUserId = user?._id || user?.id;
+            const msgSenderId = msg.senderId?._id || msg.senderId || msg.userId;
+            const isCurrentUserMessage = currentUserId && msgSenderId && 
+              currentUserId.toString() === msgSenderId.toString();
+            
+            return (
+              <div
+                key={index}
+                className={`p-3 rounded-lg w-fit max-w-[80%] ${
+                  isCurrentUserMessage
+                    ? "bg-blue-100 self-end text-right"
+                    : "bg-gray-100 self-start text-left"
+                }`}
+              >
+                <p className="break-words">{msg.message}</p>
+                {msg.timestamp && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    {new Date(msg.timestamp).toLocaleTimeString()}
+                  </p>
+                )}
+              </div>
+            );
+          })}
           <div ref={messagesEndRef} />
         </div>
 

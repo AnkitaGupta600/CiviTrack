@@ -5,7 +5,7 @@ import heroImg from "../assets/hero-illustration.svg"; // Add a custom illustrat
 
 const HeroSection = () => {
   return (
-    <section className="bg-gray-50 pt-16 pb-24">
+    <section className="bg-gray-502 pb-24">
       <div className="max-w-7xl mx-auto px-4 flex flex-col-reverse md:flex-row items-center justify-between gap-10">
         {/* Text Content */}
         <div className="md:w-1/2">
@@ -13,7 +13,7 @@ const HeroSection = () => {
             Empowering Citizens, <br /> Resolving Complaints Swiftly.
           </h1>
           <p className="mt-4 text-lg text-gray-600">
-            GrievEase is a decentralized grievance reporting platform helping
+            CiviTrack is a decentralized grievance reporting platform helping
             citizens raise civic complaints and connect with municipal
             authorities in real-time.
           </p>
@@ -25,6 +25,7 @@ const HeroSection = () => {
             >
               Report a Complaint
             </a>
+
             <a
               href="#how-it-works"
               className="flex items-center text-blue-600 hover:underline font-medium"

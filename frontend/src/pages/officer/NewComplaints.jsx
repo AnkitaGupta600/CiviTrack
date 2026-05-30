@@ -12,11 +12,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { fetchPendingComplaints } from "../../api/complaint/complaintConfig";
 // Import the acceptComplaint function
-import { acceptComplaint } from "../../api/complaint/complaintConfig"; // Update this path based on your folder structure
+import { acceptComplaint } from "../../api/complaint/complaintConfig";
+import UserDetailsModal from "../../components/UserDetailsModal"; // Update this path based on your folder structure
 
 const NewComplaints = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Fetch pending complaints from the API
   const getComplaints = async () => {
@@ -64,6 +67,7 @@ const NewComplaints = () => {
               <TableHead>Urgency</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Address</TableHead>
+              <TableHead>Citizen</TableHead>
               <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -78,6 +82,30 @@ const NewComplaints = () => {
                   {new Date(complaint.date).toLocaleDateString()}
                 </TableCell>
                 <TableCell>{`${complaint.address}`}</TableCell>
+                <TableCell>
+                  <button
+                    onClick={() => {
+                      setSelectedUserId(complaint.userId?._id || complaint.userId);
+                      setModalOpen(true);
+                    }}
+                    className="bg-blue-100 hover:bg-blue-200 text-blue-600 p-2 rounded-full transition inline-flex"
+                    title="View citizen details"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </button>
+                </TableCell>
                 <TableCell className="text-right">
                   <Button onClick={() => handleAcceptComplaint(complaint._id)}>
                     Accept
@@ -94,6 +122,14 @@ const NewComplaints = () => {
           </TableBody>
         </Table>
       )}
+      <UserDetailsModal
+        userId={selectedUserId}
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedUserId(null);
+        }}
+      />
     </div>
   );
 };

@@ -66,20 +66,29 @@ export const getAllComplaints = async (req, res) => {
 // Like a complaint
 export const likeComplaint = async (req, res) => {
   const { id } = req.params;
-  try {
-    const updatedComplaint = await Complaint.findByIdAndUpdate(
-      id,
-      { $inc: { count: 1 } },
-      { new: true }
-    );
+  const userId = req.user.id; // Get user ID from authenticated request
 
-    if (!updatedComplaint) {
+  try {
+    const complaint = await Complaint.findById(id);
+
+    if (!complaint) {
       return res.status(404).json({ error: "Complaint not found" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Liked complaint", complaint: updatedComplaint });
+    // Check if user has already liked this complaint
+    if (complaint.likedBy.includes(userId)) {
+      return res.status(400).json({
+        error: "You have already liked this complaint",
+        complaint,
+      });
+    }
+
+    // Add user to likedBy array and increment count
+    complaint.likedBy.push(userId);
+    complaint.count += 1;
+    await complaint.save();
+
+    res.status(200).json({ message: "Liked complaint", complaint });
   } catch (err) {
     console.error("Error liking complaint:", err);
     res.status(500).json({ error: "Failed to like complaint" });
@@ -172,7 +181,10 @@ export const getAssignedComplaints = async (req, res) => {
   try {
     const officerId = req.user.id;
 
-    const complaints = await Complaint.find({ officerId })
+    const complaints = await Complaint.find({ 
+      officerId,
+      status: "In Progress"
+    })
       .populate("userId", "fullName email")
       .sort({ createdAt: -1 });
 
@@ -187,5 +199,59 @@ export const getAssignedComplaints = async (req, res) => {
       success: false,
       message: "Failed to fetch assigned complaints",
     });
+  }
+};
+
+// Get resolved complaints for officer
+export const getResolvedComplaints = async (req, res) => {
+  try {
+    const officerId = req.user.id;
+
+    const complaints = await Complaint.find({ 
+      officerId,
+      status: "Resolved"
+    })
+      .populate("userId", "fullName email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Resolved complaints fetched successfully",
+      data: complaints,
+    });
+  } catch (error) {
+    console.error("Error fetching resolved complaints:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch resolved complaints",
+    });
+  }
+};
+
+// Resolve complaint
+export const resolveComplaint = async (req, res) => {
+  const { complaintId } = req.params;
+  const officerId = req.user.id;
+
+  try {
+    const complaint = await Complaint.findById(complaintId);
+
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+
+    if (complaint.officerId.toString() !== officerId) {
+      return res.status(403).json({ message: "Not authorized to resolve this complaint" });
+    }
+
+    complaint.status = "Resolved";
+    await complaint.save();
+
+    res
+      .status(200)
+      .json({ message: "Complaint marked as resolved", data: complaint });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };

@@ -10,17 +10,21 @@ import {
   getPendingComplaints,
   acceptComplaint,
   getAssignedComplaints,
+  getResolvedComplaints,
+  resolveComplaint,
 } from "../controllers/complaint.js";
 
 const router = express.Router();
 
 router.post("/submit", verifyUser, upload.single("image"), createComplaint);
 router.get("/all", getAllComplaints);
-router.post("/:id/like", likeComplaint);
-router.post("/:id/unlike", unlikeComplaint);
+router.post("/:id/like", verifyUser, likeComplaint);
+router.post("/:id/unlike", verifyUser, unlikeComplaint);
 router.get("/pending", verifyUser, getPendingComplaints);
 router.patch("/:complaintId/accept", verifyUser, acceptComplaint);
+router.patch("/:complaintId/resolve", verifyUser, resolveComplaint);
 router.get("/my", verifyUser, myComplaints);
 router.get("/assigned", verifyUser, getAssignedComplaints);
+router.get("/resolved", verifyUser, getResolvedComplaints);
 
 export default router;
