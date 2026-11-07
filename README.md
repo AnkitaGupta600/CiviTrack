@@ -25,23 +25,7 @@
 
 ---
 
-## 📥 **Getting Started**
 
-### **1. Clone the Repository**
-
-git clone https://github.com/shiv-anshu-gupta/GrievEase.git
-cd GrievEase
-
-2. Frontend Setup
-   Navigate to the frontend folder:
-   Install dependencies:
-   Add Google Maps API key in the .env file:
-   Run the frontend
-3. Backend Setup
-   Navigate to the server folder:
-   Install dependencies:
-   Create a .env file for MongoDB URI and JWT secret:
-   Start the backend server
 
 🌍 Google Maps Integration
 The Google Maps API integration allows users to pinpoint their complaint's exact location when submitting it.
