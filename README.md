@@ -1,6 +1,6 @@
-# 🎉 **GrievEase** - Decentralized Public Grievance Reporting System 🎉
+# 🎉 **CiviTrack** - Decentralized Public Grievance Reporting System 🎉
 
-**GrievEase** is a decentralized, **MERN stack**-powered platform designed to streamline the process of reporting, tracking, and resolving public grievances. Empower citizens to directly connect with municipal officers, track the status of their complaints in real time, and communicate seamlessly.
+**CiviTrack** is a decentralized, **MERN stack**-powered platform designed to streamline the process of reporting, tracking, and resolving public grievances. Empower citizens to directly connect with municipal officers, track the status of their complaints in real time, and communicate seamlessly.
 
 ---
 
