@@ -96,16 +96,4 @@ JWT Authentication is used for secure user login and accessing protected routes.
 
 Encrypted storage of user data and complaint information ensures privacy.
 
-📜 License
-This project is licensed under the MIT License - see the LICENSE file for details.
 
-✨ Contact
-For any queries or feedback, feel free to contact:
-Shivanshu Gupta
-Email: shivanshu.gupta@example.com
-GitHub: shiv-anshu-gupta
-=======
-
-# GrievEase
-
-This is my National Level Hackathon Project
